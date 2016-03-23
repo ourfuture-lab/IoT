@@ -11,7 +11,7 @@
      MISO       D12
 */
 
-//#include <spi.h>
+#include <SPI.h>
 #include "nRF24L01.h"
 #include "RF24.h"
 #include "printf.h"
@@ -74,7 +74,7 @@ void loop(void) {
     bool done = false;
     while (!done) {
       // 获取最后获得的有效信息
-      done = radio.read( &amp; got_time, sizeof(unsigned long) );
+      done = radio.read( &got_time, sizeof(unsigned long) );
       // 打印出来
       printf("Got payload %lu...", got_time);
       // 延迟一小会儿，便于完整接受下一个有效信息
@@ -86,7 +86,7 @@ void loop(void) {
     // 这里将接受的数值减去100, 那边收到的话好对比发送的信息和对方接受到的结果
     got_time -= 100;
     // 发送
-    radio.write( &amp; got_time, sizeof(unsigned long) );
+    radio.write( &got_time, sizeof(unsigned long) );
     printf("Sent response.\n\r");
     // 重新回到监听模式
     radio.startListening();
