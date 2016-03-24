@@ -1,94 +1,128 @@
+
 /*
-    本示例为接受端，接受无符号长整形数据并将最后一个数据返回给发送段
-     所有引脚连接方法
-     rf24         arduino
-     3.3v       3.3v
-     GND        GND
-     CE         D9
-     CSN        D10
-     SCK        D13
-     MOSI       D11
-     MISO       D12
+* Getting Started example sketch for nRF24L01+ radios
+* This is a very basic example of how to send data from one node to another
+* Updated: Dec 2014 by TMRh20
 */
 
 #include <SPI.h>
-#include "nRF24L01.h"
 #include "RF24.h"
-#include "printf.h"
 
-/*
-  ping-back 接受端
-*/
+/****************** User Config ***************************/
+/***      Set this radio as radio number 0 or 1         ***/
+bool radioNumber = 0;
 
-// 设置 nRF24L01+ CE与CSN引脚
-RF24 radio(9, 10);
-// 设置数据通道地址
-const uint64_t pipes[2] = { 0xF0F0F0F0E1LL, 0xF0F0F0F0D2LL };
+/* Hardware configuration: Set up nRF24L01 radio on SPI bus plus pins 7 & 8 */
+RF24 radio(7,8);
+/**********************************************************/
 
-void setup(void) {
-  Serial.begin(57600);
-  printf_begin();
-  printf("\n\rRF24/examples/pingpair/\n\r");
-  printf("ROLE: Pong back\n\r");
-  //
-  // 设置rf模块
-  //
+byte addresses[][6] = {"1Node","2Node"};
+
+// Used to control whether this node is sending or receiving
+bool role = 0;
+
+void setup() {
+  Serial.begin(115200);
+  Serial.println(F("RF24/examples/GettingStarted"));
+  Serial.println(F("*** PRESS 'T' to begin transmitting to the other node"));
+  
   radio.begin();
-  // 开启动态有效信息长度
-  radio.enableDynamicPayloads();
-  // 设置重传次数以及每次重传的延迟
-  //radio.setRetries(15,15);
-  // 设置传输速率
-  radio.setDataRate(RF24_1MBPS);
-  // 设置功放级别，有四种级别：
-  // RF24_PA_MIN=-18dBm
-  // RF24_PA_LOW=-12dBm
-  // RF24_PA_MED=-6dBM
-  // RF24_PA_HIGH=0dBm
-  radio.setPALevel(RF24_PA_HIGH);
-  // 设置信道(0-127)
-  radio.setChannel(110);
-  // 设置crc校验长度
-  // 两种 8位RF24_CRC_8 和 16位RF24_CRC_16
-  radio.setCRCLength(RF24_CRC_16);
-  // 打开两个通道用于两个设备进行来回的通信
-  // 打开本端的通道用来写消息
-  radio.openWritingPipe(pipes[1]);
-  // 打开对方的通道用来读消息
-  radio.openReadingPipe(1, pipes[0]);
-  //
-  // 开始监听
-  //
+
+  // Set the PA Level low to prevent power supply related issues since this is a
+  // getting_started sketch, and the likelihood of close proximity of the devices. RF24_PA_MAX is default.
+  radio.setPALevel(RF24_PA_LOW);
+  
+  // Open a writing and reading pipe on each radio, with opposite addresses
+  if(radioNumber){
+    radio.openWritingPipe(addresses[1]);
+    radio.openReadingPipe(1,addresses[0]);
+  }else{
+    radio.openWritingPipe(addresses[0]);
+    radio.openReadingPipe(1,addresses[1]);
+  }
+  
+  // Start the radio listening for data
   radio.startListening();
-  //
-  // 打印配置信息
-  //
-  radio.printDetails();
 }
 
-void loop(void) {
-  // 是否有有效数据可以读取
-  if (radio.available()) {
-    unsigned long got_time;
-    // 有效信息是否接收完
-    bool done = false;
-    while (!done) {
-      // 获取最后获得的有效信息
-      done = radio.read( &got_time, sizeof(unsigned long) );
-      // 打印出来
-      printf("Got payload %lu...", got_time);
-      // 延迟一小会儿，便于完整接受下一个有效信息
-      delay(20);
+void loop() {
+    
+/****************** Ping Out Role ***************************/  
+if (role == 1)  {
+    radio.stopListening();                                    // First, stop listening so we can talk.    
+    
+    //Serial.println(F("Now sending"));
+    unsigned long start_time = micros();                      // Take the time, and send it.  This will block until complete
+     if (!radio.write( &start_time, sizeof(unsigned long) )){
+       //Serial.println(F("failed"));
+     }
+    Serial.println(start_time);
+        
+    radio.startListening();                                    // Now, continue listening
+    
+    unsigned long started_waiting_at = micros();               // Set up a timeout period, get the current microseconds
+    boolean timeout = false;                                   // Set up a variable to indicate if a response was received or not
+    
+    while ( ! radio.available() ){                             // While nothing is received
+      if (micros() - started_waiting_at > 200000 ){            // If waited longer than 200ms, indicate timeout and exit while loop
+          timeout = true;
+          break;
+      }      
+    }
+        
+    if ( !timeout ){                                           // Describe the results
+        //Serial.println(F("Failed, response timed out."));
+    }else{
+        unsigned long got_time;                                // Grab the response, compare, and send to debugging spew
+        radio.read( &got_time, sizeof(unsigned long) );
+        unsigned long end_time = micros();
+        
+        // Spew it
+        Serial.print(F("Sent "));
+        Serial.print(start_time);
+        Serial.print(F(", Got response "));
+        Serial.print(got_time);
+        Serial.print(F(", Round-trip delay "));
+        Serial.print(end_time-start_time);
+        Serial.println(F(" microseconds"));
     }
 
-    // 首先停止接受，便于发送一个返回信息
-    radio.stopListening();
-    // 这里将接受的数值减去100, 那边收到的话好对比发送的信息和对方接受到的结果
-    got_time -= 100;
-    // 发送
-    radio.write( &got_time, sizeof(unsigned long) );
-    printf("Sent response.\n\r");
-    // 重新回到监听模式
-    radio.startListening();
+    // Try again 1s later
+    delay(1000);
   }
-}
+
+
+/****************** Pong Back Role ***************************/
+  if ( role == 0 )
+  {
+    unsigned long got_time;
+    
+    if( radio.available()){                                         // Variable for the received timestamp
+      while (radio.available()) {                                   // While there is data ready
+        radio.read( &got_time, sizeof(unsigned long) );             // Get the payload
+      }
+     
+      radio.stopListening();                                        // First, stop listening so we can talk   
+      radio.write( &got_time, sizeof(unsigned long) );              // Send the final one back.      
+      radio.startListening();                                       // Now, resume listening so we catch the next packets.     
+      Serial.print(F("Sent response "));
+      Serial.println(got_time);  
+   }
+ }
+
+/****************** Change Roles via Serial Commands ***************************/
+  if ( Serial.available() )
+  {
+    char c = toupper(Serial.read());
+    if ( c == 'T' && role == 0 ){      
+      Serial.println(F("*** CHANGING TO TRANSMIT ROLE -- PRESS 'R' TO SWITCH BACK"));
+      role = 1;                  // Become the primary transmitter (ping out)    
+   }else
+    if ( c == 'R' && role == 1 ){
+      Serial.println(F("*** CHANGING TO RECEIVE ROLE -- PRESS 'T' TO SWITCH BACK"));      
+      role = 0;                // Become the primary receiver (pong back)
+      radio.startListening();       
+    }
+  }
+
+} // Loop
