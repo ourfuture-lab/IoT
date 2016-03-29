@@ -24,8 +24,8 @@ V1.0	released the first version of ESP8266 library
 #define debugBaudRate 9600
 
 
-//#define UNO			//uncomment this line when you use it with UNO board
-#define MEGA		//uncomment this line when you use it with MEGA board
+#define UNO			//uncomment this line when you use it with UNO board
+//#define MEGA		//uncomment this line when you use it with MEGA board
 
 
 #define DEBUG
