@@ -8,4 +8,6 @@ Arduino的GND有多个，可以任意接
 
 Arduino内置的Serial.print函数可打印输出，通过打开Arduino IDE的串口工具，可观察到print打印做简单调试，特别要注意的PC端波特率的设置，大部程序的波特率是9600，有的38400，这个具体根据程序中设定值来设置PC端的com的波特率。
 
+3、编译
+在window系统，如果使用库文件，将库文件需要放Arduino IDE对应的目录下，例如使用了HMC5883L的库，需要放在C:\Users\Administrator\Documents\Arduino\libraries\HMC5883L这个目录下
 
