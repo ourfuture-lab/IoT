@@ -16,6 +16,16 @@ void loop()
   float xHeading = atan2(scaled.YAxis, scaled.XAxis);
   float yHeading = atan2(scaled.ZAxis, scaled.XAxis);
   float zHeading = atan2(scaled.ZAxis, scaled.YAxis);
+  
+  Serial.print("scaled.XAxis=%d;y=%d,z=%d");
+  Serial.print(scaled.XAxis);
+  Serial.print(",");
+  Serial.print(scaled.YAxis);
+  Serial.print(",");
+  Serial.print(scaled.ZAxis);
+  Serial.println(";");
+  
+  
   if (xHeading < 0)    xHeading += 2 * PI;
   if (xHeading > 2 * PI)    xHeading -= 2 * PI;
   if (yHeading < 0)    yHeading += 2 * PI;
@@ -31,5 +41,5 @@ void loop()
   Serial.print(",");
   Serial.print(zDegrees);
   Serial.println(";");
-  delay(2000);
+  delay(200);
 }
