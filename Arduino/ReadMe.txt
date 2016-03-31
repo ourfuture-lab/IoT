@@ -12,3 +12,9 @@ Arduino内置的Serial.print函数可打印输出，通过打开Arduino IDE的�
 在window系统，如果使用第三方库，需要将库文件放Arduino IDE对应的目录下，在windows用户的我的文档Arduino下。
 例如，使用了HMC5883L的库，需要放在C:\Users\Administrator\Documents\Arduino\libraries\HMC5883L这个目录下。
 
+
+sr04      超声波模块
+sku4330   红外避障模块
+HMC5883L  电子指南针罗盘模块三轴磁场
+rf24*     无线射频模块
+esp8266   无线wifi模块
