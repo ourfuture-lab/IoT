@@ -19,12 +19,15 @@
  * THE SOFTWARE.
  */
 
+#include <SoftwareSerial.h>
+
 #include "ESP8266.h"
 
-#define SSID        "ITEAD"
-#define PASSWORD    "12345678"
+#define SSID        "TP-LINK_8589"  // your wifi name
+#define PASSWORD    "qwerasdf"      // your wifi password
 
-ESP8266 wifi(Serial1);
+SoftwareSerial mySerial(2, 3); 
+ESP8266 wifi(mySerial);
 
 void setup(void)
 {
