@@ -1,12 +1,13 @@
-ESP 8266 ����ͨ��ģ��
+ESP 8266 无线通信模块
+0、注意
+  这个库因作者不再维护，另起新的库，请参考esp8266_tcpserver的库及示例，该例子包含8266连接wifi、并建立tcp server的程序。
 
-1��Ӳ������
-
-Arduino��          ��������
+1、硬件连线
+Arduino端          传感器端
    GND     <--->   GND
-   3.3V    <--->   VCC         #�������3.3V����5V�ᵼ���¶ȹ���
-   3.3V    <--->   CH_PD       #�������3.3V����5V�ᵼ���¶ȹ��ߣ��������8266��������˵����ѹ���ߣ���Ҫ�Ӵ����
-   URXD    <--->   TX��D2��    #���ݳ����趨��ȷ������Ķ˿�
-   UTXD    <--->   RX��D3��    #���ݳ����趨��ȷ������Ķ˿�
+   3.3V    <--->   VCC         #必须得连3.3V，连5V会导致温度过高
+   3.3V    <--->   CH_PD       #必须得连3.3V，连5V会导致温度过高，如果开机8266蓝灯亮，说明电压还高，需要加大电阻
+   URXD    <--->   TX（D2）    #根据程序设定的确定具体的端口
+   UTXD    <--->   RX（D3）    #根据程序设定的确定具体的端口
    
-2�������ʱ����ʹ��Arduino UNO���ӣ���uartWIFI.h�ļ��뱣֤UNO�������Ч����ȥ��#define UNO������ע�ͣ�
+2、编译的时候，若使用Arduino UNO板子，在uartWIFI.h文件须保证UNO宏代码生效（即去掉#define UNO这个宏的注释）
