@@ -1,22 +1,24 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>ourfuture</groupId>
-    <artifactId>manager</artifactId>
-    <version>0.0.1</version>
-  </parent>
-  <artifactId>onenet</artifactId>
-  
-  
-  <dependencies>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>ourfuture</groupId>
+		<artifactId>manager</artifactId>
+		<version>0.0.1</version>
+	</parent>
+	<artifactId>onenet</artifactId>
+	<packaging>jar</packaging>
+	<name>onenet</name>
+
+	<dependencies>
 		<dependency>
 			<groupId>onenet</groupId>
 			<artifactId>onenet_edp</artifactId>
 			<version>1.1.0</version>
 			<systemPath>${basedir}/lib/onenet_edp_sdk-1.1.0.jar</systemPath>
 			<scope>system</scope>
-		</dependency>	
+		</dependency>
 	</dependencies>
-	
-	
+
+
 </project>

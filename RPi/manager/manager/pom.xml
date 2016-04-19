@@ -1,36 +1,37 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>ourfuture</groupId>
-  <artifactId>manager</artifactId>
-  <version>0.0.1</version>
-  <packaging>pom</packaging>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>ourfuture</groupId>
+	<artifactId>manager</artifactId>
+	<version>0.0.1</version>
+	<packaging>pom</packaging>
 
-  <name>rest</name>
-  
-   <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.3.3.RELEASE</version>
-    </parent>
+	<name>rest</name>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-    </dependencies>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.3.3.RELEASE</version>
+	</parent>
 
-    <properties>
-        <java.version>1.7</java.version>
-    </properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+	</dependencies>
+
+	<properties>
+		<java.version>1.7</java.version>
+	</properties>
 
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -39,30 +40,56 @@
 					<target>${java.version}</target>
 				</configuration>
 			</plugin>
-        </plugins>
-        
-    </build>
-    
-     <repositories>
-        <repository>
+		</plugins>
+
+	</build>
+
+	<repositories>
+		<repository>
 			<id>spring-snapshots</id>
 			<url>http://repo.spring.io/libs-snapshot</url>
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
 		</repository>
-    </repositories>
+	</repositories>
 
-    <pluginRepositories>
-        <pluginRepository>
+
+
+<dependencyManagement>
+        <dependencies>
+
+            <!-- Manage local dependencies -->
+
+            <dependency>
+                <groupId>ourfuture</groupId>
+                <artifactId>rest</artifactId>
+                <version>${pom.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>ourfuture</groupId>
+                <artifactId>onenet</artifactId>
+                <version>${pom.version}</version>
+            </dependency>
+
+            
+
+        </dependencies>
+    </dependencyManagement>
+    
+    
+	<pluginRepositories>
+		<pluginRepository>
 			<id>spring-snapshots</id>
 			<url>http://repo.spring.io/libs-snapshot</url>
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
 		</pluginRepository>
-    </pluginRepositories>
-    <modules>
-    	<module>rest</module>
-    </modules>
+	</pluginRepositories>
+	<modules>
+		<module>rest</module>
+		<module>onenet</module>
+	</modules>
 </project>
