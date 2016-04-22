@@ -91,5 +91,6 @@
 	<modules>
 		<module>rest</module>
 		<module>onenet</module>
+		<module>awsiot</module>
 	</modules>
 </project>
