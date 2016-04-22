@@ -1,0 +1,8 @@
+package ourfuture.awsiot;
+
+public class hello {
+	public static void main(String[] arg){
+		
+	}
+
+}
